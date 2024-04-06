@@ -74,7 +74,7 @@
                         value=""  />
                       <div id="error_signin_pwd"></div>
                       <input type="password" id="pwdsignin" name="pwd" placeholder="Password" />
-                      <a href="mail_input.php">Forgot your password?</a>
+                      
                       <button style="background-color:#3498eb">Sign In</button>
                       {{msg}}
                     </form>
@@ -229,7 +229,7 @@
       </div>
     </div> -->
 
-    <div class="site-section" id="teachers-section">
+    <!-- <div class="site-section" id="teachers-section">
       <div class="container">
 
         <div class="row mb-5 justify-content-center">
@@ -245,8 +245,8 @@
             <div class="teacher text-center">
 
               <div class="py-2">
-                <h3 class="text-black"> PRAJWAL R</h3>
-                <p class="position">1RV21IS035</p>
+                <h3 class="text-black">Abdur Rub Sattikar</h3>
+                <p class="position">1RV21IS002</p>
 
               </div>
             </div>
@@ -262,11 +262,12 @@
               </div>
             </div>
           </div>
+          
           <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="teacher text-center">
 
               <div class="py-2">
-                <h3 class="text-black">CHAITHANYA GANESH</h3>
+                <h3 class="text-black">Chaithanya Ganesh</h3>
                 <p class="position">1RV21IS014</p>
 
               </div>
@@ -275,7 +276,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="site-section bg-image overlay" style="background-image: url('images/hero_1.jpg');">
       <div class="container">
@@ -312,45 +313,55 @@
   <script src="{{url_for('static',filename='js/jquery.fancybox.min.js')}}"></script>
   <script src="{{url_for('static',filename='js/jquery.sticky.js')}}"></script>
 
-    <script type="text/javascript">
-    $(document).on('submit','#signup_form',function(e)
-                   {
-      console.log('hello');
-      e.preventDefault();
-      $.ajax({
-        type:'POST',
-        url:'/register',
-        data:{
-          name:$("#name").val(),
-          mail:$("#mail").val(),
-          pwd:$("#pwd").val()
+  <script type="text/javascript">
+    $(document).on('submit', '#signup_form', function(e) {
+        // Prevent the default form submission
+        e.preventDefault();
+
+        // Retrieve the password input value
+        var password = $("#pwd").val();
+
+        // Password validation regular expressions
+        var uppercaseRegex = /[A-Z]/;
+        var digitRegex = /\d/;
+        
+        // Check if password meets the criteria
+        if (password.length < 8 || !uppercaseRegex.test(password) || !digitRegex.test(password)) {
+            // Display error message for password validation
+            $('#error_signup_pwd1').text("Password must be at least 8 characters long and contain at least one uppercase letter and one digit.").show();
+            return; // Prevent further execution of AJAX request if validation fails
+        } else {
+            // Clear any previous error messages
+            $('#error_signup_pwd1').text("").hide();
         }
-      })
 
-
-
-		.done(function(data) {
-
-
-			if (data.success) {
-                  $('#errorAlert').text(data.error).show();
-			      }
-
-			else {
-                  $('#errorAlert1').text(data.error).show();
-			      }
-
-		});
-
+        // Perform AJAX request
+        $.ajax({
+            type: 'POST',
+            url: '/register',
+            data: {
+                name: $("#name").val(),
+                mail: $("#mail").val(),
+                pwd: password // Use validated password
+            },
+            success: function(data) {
+                // Check response from server
+                if (data.success) {
+                    // Display success message
+                    $('#errorAlert').text(data.error).show();
+                } else {
+                    // Display error message
+                    $('#errorAlert1').text(data.error).show();
+                }
+            },
+            error: function(xhr, status, error) {
+                // Display error message for AJAX request failure
+                $('#errorAlert1').text("Error occurred while processing your request.").show();
+            }
+        });
     });
+</script>
 
-
-
-
-
-
-
-  </script>
   <script src="{{url_for('static',filename='js/main.js')}}"></script>
 
 

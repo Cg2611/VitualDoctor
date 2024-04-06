@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+   <!-- Basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <!-- Mobile Metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- Site Metas -->
+   <title>Medico Virtual Assistant</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- Site Icons -->
+   <link rel="shortcut icon" href="{{url_for('static',filename='image/fevicon.ico.png')}}" type="image/x-icon" />
+   <link rel="apple-touch-icon" href="{{url_for('static',filename='image/apple-touch-icon.png')}}">
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min1.css')}}">
+   <!-- Site CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='style1.css')}}">
+   <!-- Colors CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='css/colors1.css')}}">
+   <!-- ALL VERSION CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='css/versions1.css')}}">
+   <!-- Responsive CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='css/responsive1.css')}}">
+   <!-- Custom CSS -->
+   <link rel="stylesheet" href="{{url_for('static',filename='css/custom1.css')}}">
+   <!-- Modernizer for Portfolio -->
+   <script src="{{url_for('static',filename='js/modernizer1.js')}}"></script>
+
+
+   <!-- [if lt IE 9] -->
+
+   <style>
+      .embeded-website{
+         width:100%;
+         height:800px;
+         margin:40px;
+         text-align: center;
+         color:#0060b1;
+      }
+      .embeded-website iframe{
+         margin-left:40px;
+         margin-top:20px;
+      }
+      a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+/* table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #3498eb;
+  color: white;
+} */
+#text-hold h2,h6{
+     color:white;
+     letter-spacing: 1px;
+     font-weight: bold;
+}
+
+
+
+
+    /* Style for the table */
+    /* table {
+        width: 100%;
+        border-collapse: collapse;
+    } */
+    /* th, td { */
+        /* margin: 20px auto; */
+        /* padding: 10px; */
+        /* text-align: center; */
+        /* font-size: 18px;  */
+        /* Increase font size */
+        /* color:rgb(0, 0, 0); */
+    /* } */
+    /* th {
+        background-color: #ffffff;
+    } */
+    /* Style for the image */
+    img.prescription-image {
+        max-width: 200px; /* Set max-width for the image */
+        height: auto;
+        display: block;
+        /* padding-left: 50px; */
+        /* margin: 0 auto; Center the image */
+    }
+
+   </style>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+   </head>
+     <body>
+        <header>
+         
+            <div class="header-bottom wow fadeIn">
+               <div class="container">
+                  <nav class="main-menu">
+                     <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i class="fa fa-bars" aria-hidden="true"></i></button>
+                     </div>
+                     
+                     <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                           <li><a  href="{{url_for('home')}}">Home</a></li>
+                           <li><a data-scroll href="{{url_for('home')}}#about">About us</a></li>
+    
+                           <li><a data-scroll href="{{url_for('home')}}#doctors">Consult a Doctor</a></li>
+                           <li><a data-scroll href="{{url_for('home')}}#price">Consultancy Status</a></li>
+                           <li><a data-scroll href="{{url_for('home')}}#testimonials">Ask Doctor</a></li>
+                           <li><a data-scroll href="{{url_for('home')}}#getintouch">Profile</a></li>
+                           <li><a  href="{{url_for('patient_prescrip')}}">Prescriptions</a></li>
+                           <li><a data-scroll href="{{url_for('logout')}}">Logout</a></li>
+                        </ul>
+                     </div>
+                  </nav>
+    
+               </div>
+            </div>
+         </header>
+     
+         <div class="container">
+            <h2>Patient Prescriptions</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <!-- <th>ID</th> -->
+                        <th>Doctor name</th>
+                        <th>Date</th>
+                        <th >Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription in prescriptions %}
+                        <tr>
+                            <!-- <td>{{ prescription.id }}</td> -->
+                            <td>{{ prescription.doctor_name }}</td>
+                            <td>{{ prescription.date }}</td>
+                            <td><img class="prescription-image" src="data:image/jpeg;base64,{{ prescription.image_data }}" alt="Prescription"></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+     </body>
+     </html>
+     

@@ -7,7 +7,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
    <!-- Site Metas -->
-   <title>Medico Virutual Assistant</title>
+   <title>Medico Virtual Assistant</title>
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
@@ -166,6 +166,7 @@ input{
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+   <script defer src="https://app.fastbots.ai/embed.js" data-bot-id="clulhu0fl0013r9b4ihd32rkq"></script>
    </head>
    <body class="clinic_version">
       <!-- LOADER -->
@@ -189,8 +190,9 @@ input{
 
                         <li><a data-scroll href="#doctors">Consult a Doctor</a></li>
                         <li><a data-scroll href="#price">Consultancy Status</a></li>
-						<li><a data-scroll href="#testimonials">Ask Doctor</a></li>
+						      <li><a data-scroll href="#testimonials">Ask Doctor</a></li>
                         <li><a data-scroll href="#getintouch">Profile</a></li>
+                        <li><a  href="{{url_for('patient_prescrip')}}">Prescription</a></li>
                         <li><a data-scroll href="{{url_for('logout')}}">Logout</a></li>
                      </ul>
                   </div>
@@ -206,7 +208,8 @@ input{
                   <div class="text-contant">
                      <h2>
                         <span class="center"><span class="icon"><img src="{{url_for('static',filename='image/icon-logo.png')}}" alt="#" /></span></span>
-                        <a href="" class="typewrite" data-period="2000" data-type='[ "Welcome to Medico", "Your Virtual health Assistance", "" ]'>
+                        <!-- <a href="" class="typewrite" data-period="2000" data-type='[ "Welcome to Medico", "Your Virtual health Assistance", "" ]'> -->
+                           <h1>Welcome to Medico</h1>
                         <span class="wrap"></span>
                         </a>
                      </h2>
@@ -265,7 +268,7 @@ input{
                      <h2>Health Care</h2>
                      <p class="lead">Health care, health-care, or healthcare is the maintenance or improvement of health via the prevention, diagnosis, treatment, recovery, or cure of disease, illness, injury, and other physical and mental impairments in people. </p>
                      <p> Health care is delivered by health professionals and allied health fields. Medicine, dentistry, pharmacy, midwifery, nursing, optometry, audiology, psychology, occupational therapy, physical therapy, athletic training and other health professions are all part of health care. It includes work done in providing primary care, secondary care, and tertiary care, as well as in public health.  </p>
-                     <a href="#services" data-scroll class="btn btn-light btn-radius btn-brd grd1 effect-1">Learn More</a>
+                     
                   </div>
                   <!-- end messagebox -->
                </div>
@@ -282,37 +285,7 @@ input{
             <!-- end row -->
             <hr class="hr1">
             <div class="row">
-               <div class="col-md-3 col-sm-6 col-xs-12">
-                  <div class="service-widget">
-                     <div class="post-media wow fadeIn">
-                        <a href="{{url_for('static',filename='image/clinic_01.jpg')}}" data-rel="prettyPhoto[gal]" class="hoverbutton global-radius"><i class="flaticon-unlink"></i></a>
-                        <img src="{{url_for('static',filename='image/clinic_01.jpg')}}" alt="" class="img-responsive">
-                     </div>
-                     <h3>Digital Control Center</h3>
-                  </div>
-                  <!-- end service -->
-               </div>
-               
-               <div class="col-md-3 col-sm-6 col-xs-12">
-                  <div class="service-widget">
-                     <div class="post-media wow fadeIn">
-                        <a href="{{url_for('static',filename='image/clinic_01.jpg')}}" data-rel="prettyPhoto[gal]" class="hoverbutton global-radius"><i class="flaticon-unlink"></i></a>
-                        <img src="{{url_for('static',filename='image/clinic_01.jpg')}}" alt="" class="img-responsive">
-                     </div>
-                     <h3>Specialist Physicians</h3>
-                  </div>
-                  <!-- end service -->
-               </div>
-               <div class="col-md-3 col-sm-6 col-xs-12">
-                  <div class="service-widget">
-                     <div class="post-media wow fadeIn">
-                        <a href=" {{url_for('static',filename='image/clinic_01.jpg')}}" data-rel="prettyPhoto[gal]" class="hoverbutton global-radius"><i class="flaticon-unlink"></i></a>
-                        <img src="{{url_for('static',filename='image/clinic_01.jpg')}}" alt="" class="img-responsive">
-                     </div>
-                     <h3>Digital Control Center</h3>
-                  </div>
-                  <!-- end service -->
-               </div>
+
             </div>
             <!-- end row -->
          </div>
@@ -420,45 +393,39 @@ input{
             </div>
 
             <table>
-  <tr>
-    <th>Doctor Name</th>
-    <th>Department</th>
-    <th>Status</th>
-     <th>Timing</th>
-     <th> Meeting Link</th>
-  </tr>
-{% if status == 0 %}
-  <tr>
-    <td></td>
-    <td></td>
-    <td>No Consulting request made</td>
-     <td></td>
-     <td></td>
-  </tr>
-{% else %}
-               {% for i in range(0,len1) %}
-                <tr>
-    <td>{{status[i]['name']}}</td>
-    <td>{{status[i]['dept']}}</td>
-    <td>{{status[i]['status']}}</td>
-                   {% if status[i]['timing'] == None %}
-                            <td>-</td>
-                   {% else %}
-                            <td>{{status[i]['timing']}}</td>
-                   {% endif %}
-
-                   {% if status[i]['timing'] == None %}
-                            <td>-</td>
-                   {% else %}
-                            <td>{{status[i]['link']}}</td>
-                   {% endif %}
-  </tr>
-
-
-
-               {% endfor %}
-{% endif %}
-</table>
+               <tr>
+                   <th>Doctor Name</th>
+                   <th>Department</th>
+                   <th>Status</th>
+                   <th>Timing</th>
+                   <th>Meeting Link</th>
+               </tr>
+               {% if status == 0 %}
+                   <tr>
+                       <td></td>
+                       <td></td>
+                       <td>No Consulting request made</td>
+                       <td></td>
+                       <td></td>
+                   </tr>
+               {% else %}
+                   {% for i in range(0, len1) %}
+                       {% if status[i]['timing'] and status[i]['timing'] >= today %}
+                           <tr>
+                               <td>{{ status[i]['name'] }}</td>
+                               <td>{{ status[i]['dept'] }}</td>
+                               <td>{{ status[i]['status'] }}</td>
+                               <td>{{ status[i]['timing'] }}</td>
+                               {% if status[i]['link'] %}
+                                   <td>{{ status[i]['link'] }}</td>
+                               {% else %}
+                                   <td>-</td>
+                               {% endif %}
+                           </tr>
+                       {% endif %}
+                   {% endfor %}
+               {% endif %}
+           </table>
 
          </div>
       </div>
@@ -514,38 +481,58 @@ input{
                            <div class="container">
     <h4>Edit your Form</h4>
     <br>
-  <form class="form-inline" action="{{url_for('update')}}" method="post">
-    <label for="text">Name</label>
-    <input type="text" class="form-control" id="email" value="{{patient['name']}}" name="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-    <label for="age">Age</label>
+    <form class="form-inline" action="{{url_for('update')}}" method="post" onsubmit="return validateForm() && myFunction()">
+      <label for="text">Name</label>
+      <input type="text" class="form-control" id="name" value="{{patient['name']}}" name="name">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <label for="age">Age</label>
+      <input type="number" class="form-control" id="age" value="{{patient['age']}}" name="age">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       
-
-    <input type="number" class="form-control" id="age" value="{{patient['age']}}" name="age">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-       <label for="gender">Gender</label>
+      <label for="gender">Gender</label>
       <select name="gender" id="gender">
-  <option value="{{patient['gender']}}" selected>{{patient['gender']}}</option>
-  <option value="Male">Male</option>
-  <option value="Female">Female</option>
-
-</select>
-    <br><br><br><br>
-
-
-
+          <option value="{{patient['gender']}}" selected>{{patient['gender']}}</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Female">other</option>
+      </select>
+      <br><br><br><br>
+  
       <label for="email">Email</label>
-    <input type="email" class="form-control" id="mail" value="{{patient['mail']}}" name="mail" disabled>
-    <br><br><br><br>
-
-
-       <label for="email">BMI</label>
-    <input type="number" class="form-control" id="bmi" value="{{patient['BMI']}}" name="bmi">&nbsp;&nbsp;&nbsp;&nbsp;
-    <label for="location">Location</label>
-    <input type="text" class="form-control" id="location" value="{{patient['location']}}" name="location">
-<br><br>
-      <button data-scroll class="btn btn-light btn-radius btn-brd grd1 effect-1" onclick=" myFunction()" >Update</button>
-
+      <input type="email" class="form-control" id="mail" value="{{patient['mail']}}" name="mail" disabled>
+      <br><br><br><br>
+  
+      <label for="email">BMI</label>
+      <input type="number" class="form-control" id="bmi" value="{{patient['BMI']}}" name="bmi">&nbsp;&nbsp;&nbsp;&nbsp;
+      <label for="location">Location</label>
+      <input type="text" class="form-control" id="location" value="{{patient['location']}}" name="location">
+      <br><br>
+  
+      <button data-scroll class="btn btn-light btn-radius btn-brd grd1 effect-1">Update</button>
   </form>
+  
+  <script>
+      function validateForm() {
+          var ageInput = parseInt(document.getElementById("age").value);
+          if (ageInput < 1 || ageInput > 120) {
+              alert("Age must be between 1 and 120.");
+              return false; // Prevent form submission
+          }
+          // You can add more validation for other fields here if needed
+          var bmiInput = parseInt(document.getElementById("bmi").value);
+          if (bmiInput < 1 || bmiInput > 40) {
+              alert("BMI must be between 1 and 40.");
+              return false; // Prevent form submission
+          }
+          return true; // Allow form submission
+      }
+  </script>
+  
+  <script>
+      function myFunction() {
+          swal("Profile Updated");
+          return true; // This ensures form submission proceeds after showing the alert
+      }
+  </script>
 
 
 </div>
@@ -595,7 +582,9 @@ swal("Profile Updated");
 }
 </script>
 
+<!-- <iframe	style="width: 400px; height: 600px;" src="https://app.fastbots.ai/embed/clulhu0fl0013r9b4ihd32rkq"></iframe> -->
       <!-- map -->
+      
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNUPWkb4Cjd7Wxo-T4uoUldFjoiUA1fJc&callback=myMap"></script>
    </body>
 </html>

@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session, R
 import MySQLdb.cursors
 from flask_mysqldb import MySQL
 import mysql.connector
-
+from datetime import datetime
+from datetime import date
+import base64
 
 # app = Flask(__name__)
 # app.secret_key = 'your secret key'
@@ -26,7 +28,9 @@ app.config['MYSQL_USER'] = 'avnadmin'
 app.config['MYSQL_PASSWORD'] = 'AVNS_T2bnTDBLfJy5n-WKH0J'  # Replace ******* with your database password.
 app.config['MYSQL_DB'] = 'medico'  # Database name is defaultdb according to the provided information.
 app.config['MYSQL_PORT'] = 19355  # Port is 19355 according to the provided information.
-app.config['MYSQL_SSL_MODE'] = 'REQUIRED'  # SSL mode is REQUIRED according to the provided information.
+app.config['MYSQL_SSL_MODE'] = 'REQUIRED' 
+# app.config['MYSQL_PORT'] = 19355  # Port is 19355 according to the provided information.
+# app.config['MYSQL_SSL_MODE'] = 'REQUIRED'  # SSL mode is REQUIRED according to the provided information.
 mysql = MySQL(app)
 
 
@@ -42,6 +46,7 @@ def resister():
         name = request.form['name']
         mail = request.form['mail']
         pwd = request.form['pwd']
+        # hashed_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         sql = 'insert into patient (name,mail,pwd) values(%s,%s,%s)'
         values = (name, mail, pwd)
@@ -59,7 +64,7 @@ def home():
     if request.method == 'POST' and 'mail' in request.form and 'pwd' in request.form:
         mail = request.form['mail']
         pwd = request.form['pwd']
-
+        # hashed_pwd = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(
             'select * from patient where mail= %s and pwd =%s', (mail, pwd))
@@ -94,7 +99,8 @@ def home():
             session['loggedin'] = True
             session['s_mail'] = account['mail']
             session['s_pwd'] = account['pwd']
-            return render_template('index.html', doctor=doctor, len=len(doctor), patient=account, c=c, status=status, len1=len1, queries=queries, len2=len(queries))
+            today = datetime.now().strftime('%Y-%m-%d')
+            return render_template('index.html', doctor=doctor, len=len(doctor),today=today, patient=account, c=c, status=status, len1=len1, queries=queries, len2=len(queries))
         else:
             return render_template('login.html', msg='incorrect username/password')
 
@@ -123,12 +129,69 @@ def home():
 
         cursor.execute('select * from doctor')
         doctor = cursor.fetchall()
-
-        return render_template('index.html', doctor=doctor, len=len(doctor), patient=account, c=c, status=status,
+        today = datetime.now().strftime('%Y-%m-%d')
+        return render_template('index.html', doctor=doctor,today=today, len=len(doctor), patient=account, c=c, status=status,
                                len1=len(status), queries=queries, len2=len(queries))
 
     else:
         return redirect(url_for('login'))
+
+# @app.route("/prescription", methods=["POST"])
+# def prescription():
+#     if request.method == 'POST':
+#         # Retrieve data from the form
+#         patient_mail = request.form['patient_mail']
+#         doctor_id = request.form['doctor_id']
+#         image_data = request.files['image'].read()
+#         date = 
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         # Insert prescription data into the database
+#         cursor.execute('INSERT INTO Prescription (patientmail, doctorid, image_data, date) VALUES (%s, %s, %s)',
+#                        (patient_mail, doctor_id, image_data,date))
+#         mysql.connection.commit()
+#         cursor.close()
+#         flash("Prescription uploaded successfully", "success")
+#         # Optionally, redirect to a success page or return a success message
+#         return redirect(url_for('docpage'))
+@app.route("/prescription", methods=["POST"])
+def prescription():
+    if request.method == 'POST':
+        # Retrieve data from the form
+        patient_mail = request.form['patient_mail']
+        doctor_id = request.form['doctor_id']
+        image_data = request.files['image'].read()
+        today_date = date.today()  # Get today's date
+        
+        # Retrieve the doctor's name associated with the doctor_id
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT name FROM doctor WHERE id = %s', (doctor_id,))
+        doctor_name = cursor.fetchone()['name']  # Fetch the name
+        
+        # Insert prescription data into the database
+        cursor.execute('INSERT INTO Prescription (patientmail, doctor_name, image_data, date) VALUES (%s, %s, %s, %s)',
+                       (patient_mail, doctor_name, image_data, today_date))
+        mysql.connection.commit()
+        cursor.close()
+
+        # Flash a success message or redirect to a success page if needed
+        return redirect(url_for('docpage'))
+
+
+
+@app.route("/patientprescrip")
+def patient_prescrip():
+    # Retrieve prescriptions for the patient from the database
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    cursor.execute('SELECT * FROM Prescription WHERE patientmail = %s', (session['s_mail'],))
+    prescriptions = cursor.fetchall()
+
+    # Iterate over each prescription and encode image data to base64
+    for prescription in prescriptions:
+        prescription['image_data'] = base64.b64encode(prescription['image_data']).decode('utf-8')
+
+    # Render the patientprescrip.html template with the prescriptions data
+    return render_template('patientprescrip.html', prescriptions=prescriptions)
 
 
 @app.route("/consult", methods=["POST", "GET"])
@@ -231,10 +294,10 @@ def docpage():
         else:
             check = 0
         cursor.execute(
-            'SELECT a.name , b.patient_mail ,b.status,b.timing  from patient a, consult b where a.mail =  b.patient_mail and b.doctor_id= %s ', [id])
+            'SELECT a.name, a.BMI,a.age, b.patient_mail ,b.status,b.timing, b.doctor_id from patient a, consult b where a.mail =  b.patient_mail and b.doctor_id= %s ', [id])
         reques = cursor.fetchall()
-
-        return render_template('doctor_main_page.html', reques=reques, len=len(reques), doctor=doctor, check=check, queries=queries, len2=len(queries))
+        today = datetime.now().strftime('%Y-%m-%d')
+        return render_template('doctor_main_page.html', today = today,reques=reques, len=len(reques), doctor=doctor, check=check, queries=queries, len2=len(queries))
     else:
         return render_template('doctor_login.html', msg='')
 

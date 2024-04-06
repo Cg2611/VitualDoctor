@@ -78,10 +78,9 @@ table tr.header, table tr:hover {
                   <div id="navbar" class="navbar-collapse collapse">
                      <ul class="nav navbar-nav">
                         <li><a class="active" >Home</a></li>
-                        <li> <a href="#patient request" class = "link" id="request">Request</a></li>
-                <li> <a href="#question-container" class = "link" id="question">Questions</a></li>
+                        <li> <a href="#patientrequest" class = "link" id="request">Request</a></li>
                          <li> <a href="#accepted_request" class = "link" id="">Accepted Request</a></li>
-                         <li> <a href="#query" class = "link" id="">Accepted Request</a></li>
+                         <li> <a href="#query" class = "link" id="">Query</a></li>
                         <li><a data-scroll href="{{url_for('doctorLogout')}}">Logout</a></li>
                      </ul>
                   </div>
@@ -90,6 +89,12 @@ table tr.header, table tr:hover {
             </div>
          </div>
       </header>
+      {% include "/alert.html" %}
+      <div class="msg">{{ msg }}</div>
+      {% block image %}{% endblock  %}
+      {% block body %}
+      
+      {% endblock body %}
      <br><br><br><br>
        <center><h2 id =patientrequest> Patient Request </h2></center>
          <div id=request-container>
@@ -145,30 +150,46 @@ table tr.header, table tr:hover {
             </div>
 
             <table>
-  <tr>
-    <th>Patient Name</th>
-    <th>E-mail</th>
-    <th>Status</th>
-     <th>Timing</th>
-     <th> Meeting Link</th>
-  </tr>
-
-               {% for i in range(0,len) %}
-                {% if reques[i]['status'] == 'Accepted' %}
-                <tr>
-    <td>{{reques[i]['name']}}</td>
-    <td>{{reques[i]['patient_mail']}}</td>
-    <td>{{reques[i]['status']}}</td>
-                    <td>{{reques[i]['timing']}}</td>
-                    <td><a>{{doctor['link']}}</a></td>
-
-  </tr>
-
-
-{% endif %}
+               <tr>
+                   <th>Patient Name</th>
+                   <!-- <th>E-mail</th> -->
+                   <th>Status</th>
+                   <th>Timing</th>
+                   <th>BMI</th>
+                   <th>Age</th>
+                   <th>Meeting Link</th>
+                   <th>Upload presciption</th>
+               </tr>
+           
+               {% for i in range(0, len) %}
+                   {% if reques[i]['status'] == 'Accepted' %}
+                       {% if reques[i]['timing'] and reques[i]['timing'] >= today %}
+                           <tr>
+                               <td>{{ reques[i]['name'] }}</td>
+                               <!-- <td>{{ reques[i]['patient_mail'] }}</td> -->
+                               <td>{{ reques[i]['status'] }}</td>
+                               <td>{{ reques[i]['timing'] }}</td>
+                               <td>{{ reques[i]['BMI'] }}</td>
+                               <td>{{ reques[i]['age'] }}</td>
+                               {% if doctor['link'] %}
+                                   <td><a href="{{ doctor['link'] }}">{{ doctor['link'] }}</a></td>
+                                   <td><div class="form-group">
+                                    <form action="{{url_for('prescription')}}" method="post" enctype="multipart/form-data">
+                                    <label for="image">Upload Image:</label>
+                                    <input type="hidden" name="patient_mail" value="{{ reques[i]['patient_mail'] }}">
+                                    <input type="hidden" name="doctor_id" value="{{ reques[i]['doctor_id'] }}">
+                                    <input type="file" id="image" name="image" accept="image/*" required>
+                                    <button type="submit">Submit</button>
+                                </form></div></td>
+                                   
+                               {% else %}
+                                   <td>-</td>
+                               {% endif %}
+                           </tr>
+                       {% endif %}
+                   {% endif %}
                {% endfor %}
-
-</table>
+           </table>
 
          </div>
       </div>
