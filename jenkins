@@ -1,14 +1,13 @@
 pipeline {
     agent any
     triggers {
-        pollSCM '* * * * *'
+        pollSCM('* * * * *')
     }
     stages {
         stage('Build') {
             steps {
                 echo "Building.."
                 bat '''
-                
                 pip install -r requirements.txt
                 '''
             }
@@ -17,7 +16,6 @@ pipeline {
             steps {
                 echo "Testing.."
                 bat '''
-                
                 '''
             }
         }
@@ -29,6 +27,6 @@ pipeline {
                 echo "doing delivery stuff.."
                 '''
             }
-        }
-    }
+        }
+    }
 }
